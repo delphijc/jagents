@@ -39,9 +39,17 @@ jagent98.md
 jagent99.md
 JWC.20251111.md
 AGENT_NAMING_STANDARDIZATION.md
+bddrules.md
+AGENT_LINKS_UPDATE.md
+BDD_ANALYSIS.md
+SKILLS_WORKFLOWS_RULES_ANALYSIS.md
+GITHUB_PUBLISHING.md
+JWC_MODULES_SUMMARY.md
+publish-to-github.sh
+
 
 # Future use files
-@more.md
+more.md
 
 # OS
 .DS_Store
