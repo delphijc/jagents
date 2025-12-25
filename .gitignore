@@ -1,0 +1,64 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.npm
+.yarn
+
+# TypeScript
+*.tsbuildinfo
+dist/
+build/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files (from development)
+jagent97.md
+jagent98.md
+jagent99.md
+JWC.20251111.md
+AGENT_NAMING_STANDARDIZATION.md
+
+# Future use files
+@more.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.js.map
+*.d.ts.map
+
+# MCP server compiled output (keep source, ignore compiled)
+# Note: dist/ folders are needed for running servers, so we include them
+# but ignore source maps and other build artifacts
+jagents-mcp-servers/*/dist/*.map
+
+# Gemini / Antigravity brain artifacts (local assistant state)
+.gemini/
+
+# Temporary docs
+*.tmp
+*.bak

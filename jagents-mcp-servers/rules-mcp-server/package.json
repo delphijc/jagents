@@ -1,0 +1,28 @@
+{
+    "name": "@jagents/rules-mcp-server",
+    "version": "1.0.0",
+    "description": "MCP server exposing JAGENTS architectural and security rules as validators",
+    "type": "module",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "tsc --watch"
+    },
+    "keywords": [
+        "mcp",
+        "jagents",
+        "rules",
+        "compliance",
+        "architecture"
+    ],
+    "author": "JAGENTS",
+    "license": "MIT",
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.3.0"
+    }
+}

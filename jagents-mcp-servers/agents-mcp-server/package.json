@@ -1,0 +1,28 @@
+{
+  "name": "@jagents/agents-mcp-server",
+  "version": "1.0.0",
+  "description": "Model Context Protocol server exposing JAGENTS agents as tools",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: tests to be implemented\" && exit 0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "jagents",
+    "ai-agents"
+  ],
+  "author": "JAGENTS",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}
