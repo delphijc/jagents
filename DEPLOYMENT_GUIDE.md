@@ -32,7 +32,96 @@ Complete guide for deploying and configuring all 4 JAGENTS MCP servers.
 
 ---
 
-## Quick Start
+## Global Installation (Recommended)
+
+For system-wide access from any project directory, install JAGENTS MCP servers globally using npm link:
+
+### Automated Installation
+
+```bash
+cd /path/to/jagents/jagents-mcp-servers
+
+# Build and link all servers globally
+./link-all.sh
+```
+
+This will:
+1. Install dependencies for all 4 servers
+2. Build TypeScript to JavaScript
+3. Create global symlinks for easy access
+
+### Manual Installation
+
+If you prefer to install servers individually:
+
+```bash
+cd /path/to/jagents/jagents-mcp-servers
+
+# For each server
+cd agents-mcp-server && npm install && npm run build && npm link && cd ..
+cd skills-mcp-server && npm install && npm run build && npm link && cd ..
+cd workflows-mcp-server && npm install && npm run build && npm link && cd ..
+cd rules-mcp-server && npm install && npm run build && npm link && cd ..
+```
+
+### Verify Global Installation
+
+```bash
+# Check commands are available
+which jagents-agents
+which jagents-skills
+which jagents-workflows
+which jagents-rules
+
+# All should return paths like: /usr/local/bin/jagents-agents
+```
+
+### Configure Gemini CLI for Global Commands
+
+Update `~/.gemini/settings.json` to use the globally installed commands:
+
+```json
+{
+  "mcpServers": {
+    "jagents-agents": {
+      "command": "jagents-agents",
+      "description": "10 Agile method development agents"
+    },
+    "jagents-skills": {
+      "command": "jagents-skills",
+      "description": "9 reusable capability skills"
+    },
+    "jagents-workflows": {
+      "command": "jagents-workflows",
+      "description": "5 multi-step orchestration workflows"
+    },
+    "jagents-rules": {
+      "command": "jagents-rules",
+      "description": "6 architectural and security rule validators"
+    }
+  }
+}
+```
+
+**Benefits of Global Installation:**
+- ✅ Access from any directory
+- ✅ No hardcoded absolute paths
+- ✅ Works across all projects
+- ✅ Easier to update (rebuild + relink)
+- ✅ Simpler configuration
+
+### Uninstalling
+
+```bash
+cd /path/to/jagents/jagents-mcp-servers
+./unlink-all.sh
+```
+
+---
+
+## Quick Start (Local Installation)
+
+> **Note:** For easier access from any directory, see [Global Installation](#global-installation-recommended) above. This section covers local installation with absolute paths.
 
 ### 1. Build All Servers
 
@@ -277,6 +366,40 @@ gemini mcp remove jagents-agents
 gemini mcp add jagents-agents node /path/to/dist/index.js
 
 # Restart Gemini CLI
+```
+
+### Global Installation Issues
+
+**Commands not found after linking:**
+
+```bash
+# Verify npm global bin directory is in PATH
+npm config get prefix
+# Should output something like /usr/local or ~/.npm-global
+
+# Check if global bin is in PATH
+echo $PATH | grep -q "$(npm config get prefix)/bin" && echo "✅ In PATH" || echo "❌ Not in PATH"
+
+# Add to PATH if needed (add to ~/.zshrc or ~/.bashrc)
+export PATH="$(npm config get prefix)/bin:$PATH"
+source ~/.zshrc  # or ~/.bashrc
+```
+
+**Link conflicts:**
+
+```bash
+# If you get "already exists" errors
+cd /path/to/jagents/jagents-mcp-servers
+./unlink-all.sh
+./link-all.sh
+```
+
+**Stale links after updates:**
+
+```bash
+# After updating JAGENTS code, rebuild and relink
+cd /path/to/jagents/jagents-mcp-servers
+./link-all.sh  # Rebuilds automatically
 ```
 
 ### Permission Errors

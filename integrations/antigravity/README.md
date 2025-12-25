@@ -32,23 +32,50 @@ cd /Users/delphijc/Projects/jagents/jagents-mcp-servers
 
 ## Configuration
 
-### Method 1: Gemini CLI (Recommended)
+### Method 1: Global Installation (Recommended)
+
+Install JAGENTS MCP servers globally for access from any project directory:
 
 ```bash
-# Set base path
-BASE="/Users/delphijc/Projects/jagents/jagents-mcp-servers"
-
-# Add all 4 JAGENTS servers
-gemini mcp add jagentsagents node "$BASE/agents-mcp-server/dist/index.js"
-gemini mcp add jagents-skills node "$BASE/skills-mcp-server/dist/index.js"
-gemini mcp add jagents-workflows node "$BASE/workflows-mcp-server/dist/index.js"
-gemini mcp add jagents-rules node "$BASE/rules-mcp-server/dist/index.js"
-
-# Verify
-gemini mcp list
+# Build and link all JAGENTS servers globally
+cd /Users/delphijc/Projects/jagents/jagents-mcp-servers
+./link-all.sh
 ```
 
-### Method 2: Settings JSON
+Then update `~/.gemini/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "jagents-agents": {
+      "command": "jagents-agents",
+      "description": "JAGENTS Agile Method Development Agents"
+    },
+    "jagents-skills": {
+      "command": "jagents-skills",
+      "description": "JAGENTS Reusable Skills"
+    },
+    "jagents-workflows": {
+      "command": "jagents-workflows",
+      "description": "JAGENTS Orchestration Workflows"
+    },
+    "jagents-rules": {
+      "command": "jagents-rules",
+      "description": "JAGENTS Architectural & Security Rules"
+    }
+  }
+}
+```
+
+**Why Global Installation?**
+- ✅ Works from any project directory
+- ✅ No hardcoded paths
+- ✅ Easier to update
+- ✅ Simpler configuration
+
+### Method 2: Local Installation (Alternative)
+
+If you prefer project-specific installation, edit `~/.gemini/settings.json` with absolute paths:
 
 Edit `~/.gemini/settings.json`:
 
@@ -82,6 +109,21 @@ Edit `~/.gemini/settings.json`:
 ---
 
 ## Verification
+
+### Check Global Installation
+
+```bash
+# Verify commands are available
+which jagents-agents
+which jagents-skills
+which jagents-workflows
+which jagents-rules
+
+# Test command execution
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | jagents-agents
+```
+
+### Test with Antigravity
 
 Since you're using Antigravity right now, try:
 
@@ -304,6 +346,22 @@ print(response["result"]["content"][0]["text"])
 ## Troubleshooting
 
 ### Tools Not Appearing
+
+**For global installation:**
+
+```bash
+# Check if commands exist
+which jagents-agents
+
+# Verify they're in PATH
+echo $PATH | grep -q "$(npm config get prefix)/bin" && echo "✅ In PATH" || echo "❌ Not in PATH"
+
+# Rebuild and relink if needed
+cd /Users/delphijc/Projects/jagents/jagents-mcp-servers
+./link-all.sh
+```
+
+**For local installation:**
 
 **Current session:**
 ```

@@ -4,6 +4,9 @@
   "description": "Model Context Protocol server exposing JAGENTS agents as tools",
   "main": "dist/index.js",
   "type": "module",
+  "bin": {
+    "jagents-agents": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
