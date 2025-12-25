@@ -83,17 +83,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error('🚀 JAGENTS Agents MCP Server v1.1.0');
-    console.error(`📦 Available agents: ${Object.keys(agents).length}`);
-    console.error('   └─ 9 core Agile method agents');
-    console.error('   └─ 1 specialized security testing agent');
-    console.error('');
-    console.error('Available tools:');
-    Object.values(agents).forEach(agent => {
-        console.error(`  ✓ ${agent.toolDefinition.name}`);
-    });
-    console.error('');
-    console.error('Server ready on stdio');
+    // Server is ready - silent mode for MCP protocol compliance
 }
 
 main().catch((error) => {

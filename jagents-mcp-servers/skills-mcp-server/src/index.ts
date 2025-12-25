@@ -82,15 +82,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error('🎯 JAGENTS Skills MCP Server v1.0.0');
-    console.error(`📚 Available skills: ${Object.keys(skills).length}/9`);
-    console.error('');
-    console.error('Available tools:');
-    Object.values(skills).forEach(skill => {
-        console.error(`  ✓ ${skill.toolDefinition.name}`);
-    });
-    console.error('');
-    console.error('Server ready on stdio');
+    // Server is ready - silent mode for MCP protocol compliance
 }
 
 main().catch((error) => {

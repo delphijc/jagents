@@ -14,7 +14,7 @@ export interface EnterpriseSecurityAssessmentInput {
 
 export const enterpriseSecurityAssessmentWorkflow = {
     toolDefinition: {
-        name: 'jagents_workflow_enterprise_security_assessment',
+        name: 'jagents_workflow_enterprise_sec_assess',
         description: 'Comprehensive enterprise security assessment workflow. Combines GRC management, DevSecOps, and compliance auditing.',
         inputSchema: {
             type: 'object',

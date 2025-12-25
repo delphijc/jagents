@@ -84,19 +84,31 @@ Update `~/.gemini/settings.json` to use the globally installed commands:
 {
   "mcpServers": {
     "jagents-agents": {
-      "command": "jagents-agents",
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/agents-mcp-server/dist/index.js"
+      ],
       "description": "10 Agile method development agents"
     },
-    "jagents-skills": {
-      "command": "jagents-skills",
-      "description": "9 reusable capability skills"
-    },
     "jagents-workflows": {
-      "command": "jagents-workflows",
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/workflows-mcp-server/dist/index.js"
+      ],
       "description": "5 multi-step orchestration workflows"
     },
+    "jagents-skills": {
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/skills-mcp-server/dist/index.js"
+      ],
+      "description": "9 reusable capability skills"
+    },
     "jagents-rules": {
-      "command": "jagents-rules",
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/rules-mcp-server/dist/index.js"
+      ],
       "description": "6 architectural and security rule validators"
     }
   }
@@ -175,22 +187,30 @@ Alternatively, add to `~/.gemini/settings.json`:
   "mcpServers": {
     "jagents-agents": {
       "command": "node",
-      "args": ["/path/to/jagents-mcp-servers/agents-mcp-server/dist/index.js"],
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/agents-mcp-server/dist/index.js"
+      ],
       "description": "10 Agile method development agents"
     },
     "jagents-workflows": {
       "command": "node",
-      "args": ["/path/to/jagents-mcp-servers/workflows-mcp-server/dist/index.js"],
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/workflows-mcp-server/dist/index.js"
+      ],
       "description": "5 multi-step orchestration workflows"
     },
     "jagents-skills": {
       "command": "node",
-      "args": ["/path/to/jagents-mcp-servers/skills-mcp-server/dist/index.js"],
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/skills-mcp-server/dist/index.js"
+      ],
       "description": "9 reusable capability skills"
     },
     "jagents-rules": {
       "command": "node",
-      "args": ["/path/to/jagents-mcp-servers/rules-mcp-server/dist/index.js"],
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/rules-mcp-server/dist/index.js"
+      ],
       "description": "6 architectural and security rule validators"
     }
   }

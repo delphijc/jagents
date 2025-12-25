@@ -64,9 +64,32 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "jagents-agents": {
       "command": "node",
-      "args": ["/path/to/agents-mcp-server/dist/index.js"]
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/agents-mcp-server/dist/index.js"
+      ],
+      "description": "10 Agile method development agents"
+    },
+    "jagents-workflows": {
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/workflows-mcp-server/dist/index.js"
+      ],
+      "description": "5 multi-step orchestration workflows"
+    },
+    "jagents-skills": {
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/skills-mcp-server/dist/index.js"
+      ],
+      "description": "9 reusable capability skills"
+    },
+    "jagents-rules": {
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/rules-mcp-server/dist/index.js"
+      ],
+      "description": "6 architectural and security rule validators"
     }
-    // ... add other servers
   }
 }
 ```

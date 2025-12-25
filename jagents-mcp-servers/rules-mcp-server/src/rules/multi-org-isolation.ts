@@ -21,7 +21,7 @@ export const multiOrgIsolationRule = {
                     description: 'Multi-tenant architecture description',
                 },
                 tenantModel: {
-                    type: '            string',
+                    type: 'string',
                     enum: ['database-per-tenant', 'schema-per-tenant', 'row-level-security'],
                     description: 'Tenant isolation model',
                 },

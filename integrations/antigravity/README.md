@@ -42,26 +42,38 @@ cd /Users/delphijc/Projects/jagents/jagents-mcp-servers
 ./link-all.sh
 ```
 
-Then update `~/.gemini/settings.json`:
+Then update `~/.gemini/antigravity/mcp-config.json`:
 
 ```json
 {
   "mcpServers": {
     "jagents-agents": {
-      "command": "jagents-agents",
-      "description": "JAGENTS Agile Method Development Agents"
-    },
-    "jagents-skills": {
-      "command": "jagents-skills",
-      "description": "JAGENTS Reusable Skills"
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/agents-mcp-server/dist/index.js"
+      ],
+      "description": "10 Agile method development agents"
     },
     "jagents-workflows": {
-      "command": "jagents-workflows",
-      "description": "JAGENTS Orchestration Workflows"
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/workflows-mcp-server/dist/index.js"
+      ],
+      "description": "5 multi-step orchestration workflows"
+    },
+    "jagents-skills": {
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/skills-mcp-server/dist/index.js"
+      ],
+      "description": "9 reusable capability skills"
     },
     "jagents-rules": {
-      "command": "jagents-rules",
-      "description": "JAGENTS Architectural & Security Rules"
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/rules-mcp-server/dist/index.js"
+      ],
+      "description": "6 architectural and security rule validators"
     }
   }
 }
@@ -75,32 +87,40 @@ Then update `~/.gemini/settings.json`:
 
 ### Method 2: Local Installation (Alternative)
 
-If you prefer project-specific installation, edit `~/.gemini/settings.json` with absolute paths:
+If you prefer project-specific installation, edit `~/.gemini/antigravity/mcp-config.json` with absolute paths:
 
-Edit `~/.gemini/settings.json`:
+Edit `~/.gemini/antigravity/mcp-config.json`:
 
 ```json
 {
   "mcpServers": {
     "jagents-agents": {
       "command": "node",
-      "args": ["/Users/delphijc/Projects/jagents/jagents-mcp-servers/agents-mcp-server/dist/index.js"],
-      "description": "JAGENTS Agile Method Development Agents"
-    },
-    "jagents-skills": {
-      "command": "node",
-      "args": ["/Users/delphijc/Projects/jagents/jagents-mcp-servers/skills-mcp-server/dist/index.js"],
-      "description": "JAGENTS Reusable Skills"
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/agents-mcp-server/dist/index.js"
+      ],
+      "description": "10 Agile method development agents"
     },
     "jagents-workflows": {
       "command": "node",
-      "args": ["/Users/delphijc/Projects/jagents/jagents-mcp-servers/workflows-mcp-server/dist/index.js"],
-      "description": "JAGENTS Orchestration Workflows"
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/workflows-mcp-server/dist/index.js"
+      ],
+      "description": "5 multi-step orchestration workflows"
+    },
+    "jagents-skills": {
+      "command": "node",
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/skills-mcp-server/dist/index.js"
+      ],
+      "description": "9 reusable capability skills"
     },
     "jagents-rules": {
       "command": "node",
-      "args": ["/Users/delphijc/Projects/jagents/jagents-mcp-servers/rules-mcp-server/dist/index.js"],
-      "description": "JAGENTS Architectural & Security Rules"
+      "args": [
+        "/opt/homebrew/lib/node_modules/@jagents/rules-mcp-server/dist/index.js"
+      ],
+      "description": "6 architectural and security rule validators"
     }
   }
 }
