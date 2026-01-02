@@ -11,6 +11,9 @@ package-lock.json
 *.tsbuildinfo
 dist/
 build/
+context/
+
+
 
 # IDE / Editor
 .vscode/

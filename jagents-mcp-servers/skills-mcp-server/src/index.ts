@@ -16,8 +16,10 @@ import { devSecOpsSkill } from './skills/devsecops.js';
 import { contentCreationSkill } from './skills/content-creation.js';
 import { imageCreationSkill } from './skills/image-creation.js';
 import { lifeManagementSkill } from './skills/life-management.js';
+import { downloadImagesSkill } from './skills/download-images.js';
+import { renameFilesToTitleSkill } from './skills/rename-files-to-title.js';
 
-// Skill registry - ALL 9 JAGENTS skills
+// Skill registry - ALL 11 JAGENTS skills
 const skills = {
     brainstorming: brainstormingSkill,
     designThinking: designThinkingSkill,
@@ -28,6 +30,8 @@ const skills = {
     contentCreation: contentCreationSkill,
     imageCreation: imageCreationSkill,
     lifeManagement: lifeManagementSkill,
+    downloadImages: downloadImagesSkill,
+    renameFilesToTitle: renameFilesToTitleSkill,
 };
 
 // Create MCP server
