@@ -18,6 +18,10 @@ import { imageCreationSkill } from './skills/image-creation.js';
 import { lifeManagementSkill } from './skills/life-management.js';
 import { downloadImagesSkill } from './skills/download-images.js';
 import { renameFilesToTitleSkill } from './skills/rename-files-to-title.js';
+// New Core/CIS Skills
+import { coreTasksSkill } from './skills/core-tasks.js';
+import { innovationStrategySkill } from './skills/cis-innovation-strategy.js';
+import { problemSolvingSkill } from './skills/cis-problem-solving.js';
 
 // Skill registry - ALL 11 JAGENTS skills
 const skills = {
@@ -32,6 +36,10 @@ const skills = {
     lifeManagement: lifeManagementSkill,
     downloadImages: downloadImagesSkill,
     renameFilesToTitle: renameFilesToTitleSkill,
+    // New Core/CIS Skills
+    coreTasks: coreTasksSkill,
+    cisInnovationStrategy: innovationStrategySkill,
+    cisProblemSolving: problemSolvingSkill,
 };
 
 // Create MCP server
@@ -50,7 +58,11 @@ const server = new Server(
 // List available tools (skills)
 server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
-        tools: Object.values(skills).map(skill => skill.toolDefinition),
+        tools: Object.values(skills).map(skill => (skill as any).action ? (skill as any) : {
+            name: (skill as any).name || (skill as any).toolDefinition?.name,
+            description: (skill as any).description || (skill as any).toolDefinition?.description,
+            inputSchema: (skill as any).inputSchema || (skill as any).toolDefinition?.inputSchema
+        }),
     };
 });
 
@@ -59,7 +71,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
 
     // Find the skill
-    const skill = Object.values(skills).find(s => s.toolDefinition.name === name);
+    const skill = Object.values(skills).find(s => {
+        const skillName = (s as any).name || (s as any).toolDefinition?.name;
+        return skillName === name;
+    });
 
     if (!skill) {
         throw new Error(`Unknown skill: ${name}`);

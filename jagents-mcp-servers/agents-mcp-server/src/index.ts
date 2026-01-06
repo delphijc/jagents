@@ -15,6 +15,14 @@ import { testArchitectAgent } from './agents/test-architect.js';
 import { securityArchitectAgent } from './agents/security-architect.js';
 import { csoAgent } from './agents/cso.js';
 import { securityTestAnalystAgent } from './agents/security-test-analyst.js';
+import { brainstormingCoach } from './agents/cis-brainstorming-coach.js';
+import { designThinkingCoach } from './agents/cis-design-thinking-coach.js';
+import { problemSolvingCoach } from './agents/cis-problem-solving-coach.js';
+import { innovationOracle } from './agents/cis-innovation-oracle.js';
+import { masterStoryteller } from './agents/cis-master-storyteller.js';
+// New Audit Agents
+import { technicalWriterAgent } from './agents/technical-writer.js';
+import { quickFlowSoloDevAgent } from './agents/quick-flow-solo-dev.js';
 
 // Agent registry - ALL 10 JAGENTS agents (9 core + 1 security testing)
 const agents = {
@@ -28,6 +36,15 @@ const agents = {
     securityArchitect: securityArchitectAgent,
     cso: csoAgent,
     securityTestAnalyst: securityTestAnalystAgent,
+    // CIS Agents
+    brainstormingCoach: brainstormingCoach,
+    designThinkingCoach: designThinkingCoach,
+    problemSolvingCoach: problemSolvingCoach,
+    innovationOracle: innovationOracle,
+    masterStoryteller: masterStoryteller,
+    // New Audit Agents
+    technicalWriter: technicalWriterAgent,
+    quickFlowSoloDev: quickFlowSoloDevAgent,
 };
 
 // Create MCP server

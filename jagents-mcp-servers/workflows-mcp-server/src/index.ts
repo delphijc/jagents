@@ -12,6 +12,20 @@ import { fiveWsWorkflow } from './workflows/five-ws.js';
 import { scaleAdaptivePlanningWorkflow } from './workflows/scale-adaptive-planning.js';
 import { extensiveResearchWorkflow } from './workflows/extensive-research.js';
 import { enterpriseSecurityAssessmentWorkflow } from './workflows/enterprise-security-assessment.js';
+// New BMGD/CIS Workflows
+import { bmgdPreproductionWorkflow } from './workflows/bmgd-preproduction.js';
+import { bmgdGameDesignWorkflow } from './workflows/bmgd-game-design.js';
+import { cisBrainstormingWorkflow } from './workflows/cis-brainstorming.js';
+import { cisDesignThinkingWorkflow } from './workflows/cis-design-thinking.js';
+// New Audit Workflows
+import { advancedElicitationWorkflow } from './workflows/advanced-elicitation.js';
+import { partyModeWorkflow } from './workflows/party-mode.js';
+import { quickFlowWorkflow } from './workflows/quick-flow.js';
+import { bmgdTechnicalWorkflow } from './workflows/bmgd-technical.js';
+import { bmgdProductionWorkflow } from './workflows/bmgd-production.js';
+import { cisInnovationStrategyWorkflow } from './workflows/cis-innovation-strategy.js';
+import { cisProblemSolvingWorkflow } from './workflows/cis-problem-solving.js';
+import { cisStorytellingWorkflow } from './workflows/cis-storytelling.js';
 
 // Workflow registry - ALL 5 JAGENTS workflows
 const workflows = {
@@ -20,6 +34,20 @@ const workflows = {
     scaleAdaptivePlanning: scaleAdaptivePlanningWorkflow,
     extensiveResearch: extensiveResearchWorkflow,
     enterpriseSecurityAssessment: enterpriseSecurityAssessmentWorkflow,
+    // New BMGD/CIS Workflows
+    bmgdPreproduction: bmgdPreproductionWorkflow,
+    bmgdGameDesign: bmgdGameDesignWorkflow,
+    cisBrainstorming: cisBrainstormingWorkflow,
+    cisDesignThinking: cisDesignThinkingWorkflow,
+    // New Audit Workflows
+    advancedElicitation: advancedElicitationWorkflow,
+    partyMode: partyModeWorkflow,
+    quickFlow: quickFlowWorkflow,
+    bmgdTechnical: bmgdTechnicalWorkflow,
+    bmgdProduction: bmgdProductionWorkflow,
+    cisInnovationStrategy: cisInnovationStrategyWorkflow,
+    cisProblemSolving: cisProblemSolvingWorkflow,
+    cisStorytelling: cisStorytellingWorkflow,
 };
 
 // Create MCP server
@@ -38,7 +66,11 @@ const server = new Server(
 // List available tools (workflows)
 server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
-        tools: Object.values(workflows).map(workflow => workflow.toolDefinition),
+        tools: Object.values(workflows).map(workflow => (workflow as any).name ? {
+            name: (workflow as any).name,
+            description: (workflow as any).description,
+            inputSchema: (workflow as any).inputSchema
+        } : (workflow as any).toolDefinition),
     };
 });
 
@@ -47,7 +79,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
 
     // Find the workflow
-    const workflow = Object.values(workflows).find(w => w.toolDefinition.name === name);
+    const workflow = Object.values(workflows).find(w => {
+        const wfName = (w as any).name || (w as any).toolDefinition?.name;
+        return wfName === name;
+    });
 
     if (!workflow) {
         throw new Error(`Unknown workflow: ${name}`);
