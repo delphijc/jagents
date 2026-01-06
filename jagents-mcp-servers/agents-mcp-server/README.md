@@ -27,11 +27,13 @@ The server runs on stdio and communicates via MCP protocol.
 ### Available Agents
 
 #### 1. Analyst
+
 **Tool Name:** `jagents_analyst`
 
 **Purpose:** Reflective coach for ideation using Creative Intelligence Suite
 
 **Input:**
+
 - `userIdea` (required): Raw idea or project concept
 - `workflow` (optional): "six-thinking-hats" or "five-ws"
 - `context` (optional): Additional context
@@ -39,6 +41,7 @@ The server runs on stdio and communicates via MCP protocol.
 **Output:** Project Brief with brainstorming analysis
 
 **Example:**
+
 ```json
 {
   "name": "jagents_analyst",
@@ -50,11 +53,13 @@ The server runs on stdio and communicates via MCP protocol.
 ```
 
 #### 2. Product Manager
+
 **Tool Name:** `jagents_product_manager`
 
 **Purpose:** Scale-adaptive planner that converts Project Briefs into PRDs
 
 **Input:**
+
 - `projectBrief` (required): Project Brief from Analyst
 - `planningTrack` (optional): "quick-flow", "agile-standard", or "enterprise"
 - `scope` (optional): Scope constraints
@@ -62,6 +67,7 @@ The server runs on stdio and communicates via MCP protocol.
 **Output:** Product Requirements Document (PRD) or Game Design Document (GDD)
 
 **Example:**
+
 ```json
 {
   "name": "jagents_product_manager",
@@ -72,18 +78,28 @@ The server runs on stdio and communicates via MCP protocol.
 }
 ```
 
+#### 11. Technical Writer
+
+**Tool Name:** `jagents_technical_writer`
+**Purpose:** Documentation specialist (Paige)
+
+#### 12. Quick Flow Solo Dev
+
+**Tool Name:** `jagents_quick_flow_solo_dev`
+**Purpose:** Rapid prototyping MVP (Barry)
+
 ## Configuration for AI Tools
 
 ### Gemini CLI
 
-Add to `~/.gemini-cli/mcp-config.json`:
+Add to `~/.gemini/settings.json`:
 
 ```json
 {
   "mcpServers": {
     "jagents-agents": {
       "command": "node",
-      "args": ["/absolute/path/to/jagents-mcp-servers/agents-mcp-server/dist/index.js"]
+      "args": ["/opt/homebrew/bin/jagents-agents"]
     }
   }
 }
@@ -96,7 +112,7 @@ Add to Qwen Code MCP configuration:
 ```toml
 [mcp.servers.jagents-agents]
 command = "node"
-args = ["/absolute/path/to/jagents-mcp-servers/agents-mcp-server/dist/index.js"]
+args = ["/opt/homebrew/bin/jagents-agents"]
 ```
 
 ### Kiro
@@ -141,11 +157,12 @@ This server implements Phase 1 and Phase 2 of the Agile method:
 **Phase 3: Architecture** → Architect + Security Architect → Architecture Document  
 **Phase 4: Design** → UX Designer + Scrum Master → UX Design + Stories  
 **Phase 5: Implementation** → Developer → Code Guidance  
-**Phase 6: Testing** → Test Architect + Security Test Analyst → Test Reports  
+**Phase 6: Testing** → Test Architect + Security Test Analyst → Test Reports
 
 ### Workflow Diagrams
 
 See [WORKFLOW_DIAGRAMS.md](./WORKFLOW_DIAGRAMS.md) for comprehensive sequence diagrams showing:
+
 - Complete Agile method workflow
 - Individual phase workflows
 - Security BDD testing workflow

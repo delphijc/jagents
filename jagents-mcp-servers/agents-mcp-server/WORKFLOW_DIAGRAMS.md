@@ -21,19 +21,19 @@ sequenceDiagram
     participant STA as Security Test Analyst
     participant SA as Security Architect
     participant CSO
-    
+
     %% Phase 1: Ideation
     User->>Analyst: Raw idea/concept
     Analyst->>Analyst: Apply Six Thinking Hats
     Analyst->>Analyst: Apply Five W's
     Analyst-->>User: Project Brief
-    
+
     %% Phase 2: Requirements
     User->>PM: Project Brief
     PM->>PM: Scale-Adaptive Planning
     PM->>PM: Generate PRD/GDD
     PM-->>User: Requirements Document
-    
+
     %% Phase 3: Architecture
     User->>Arch: PRD + Requirements
     Arch->>Arch: Detect project type
@@ -42,7 +42,7 @@ sequenceDiagram
     SA->>SA: Generate BDD security stories
     SA-->>Arch: Security architecture
     Arch-->>User: Architecture Document
-    
+
     %% Phase 4: Design & Planning
     par UX Design
         User->>UX: PRD + Architecture
@@ -53,12 +53,12 @@ sequenceDiagram
         SM->>SM: Story Development
         SM-->>User: Developer Stories
     end
-    
+
     %% Phase 5: Implementation
     User->>Dev: Stories + Architecture
     Dev->>Dev: Generate implementation plan
     Dev-->>User: Code guidance + checklist
-    
+
     %% Phase 6: Testing & Security
     par Quality Testing
         User->>TEA: Implementation
@@ -70,7 +70,7 @@ sequenceDiagram
         STA->>STA: Create Gherkin scenarios
         STA-->>User: Security Test Suite
     end
-    
+
     %% Executive Oversight
     User->>CSO: Organizational context
     CSO->>CSO: Prioritize BDD stories
@@ -88,9 +88,9 @@ sequenceDiagram
     participant Analyst
     participant SixHats as Six Thinking Hats
     participant FiveWs as Five W's
-    
+
     User->>Analyst: userIdea + context
-    
+
     alt Six Thinking Hats Workflow
         Analyst->>SixHats: Analyze idea
         SixHats->>SixHats: White Hat (Facts)
@@ -109,7 +109,7 @@ sequenceDiagram
         FiveWs->>FiveWs: Why (Purpose)
         Five Ws-->>Analyst: Structured analysis
     end
-    
+
     Analyst->>Analyst: Synthesize insights
     Analyst->>Analyst: Generate Project Brief
     Analyst-->>User: Project Brief (→ Phase 2)
@@ -124,12 +124,12 @@ sequenceDiagram
     participant User
     participant PM as Product Manager
     participant SAP as Scale-Adaptive Planning
-    
+
     User->>PM: projectBrief
-    
+
     PM->>SAP: Analyze project scope
     SAP->>SAP: Calculate complexity score
-    
+
     alt Quick Flow (<2 weeks)
         SAP-->>PM: Select quick-flow track
         PM->>PM: Generate lightweight PRD
@@ -145,7 +145,7 @@ sequenceDiagram
         PM->>PM: Define phases & milestones
         PM-->>User: Game Design Document
     end
-    
+
     PM-->>User: Requirements (→ Phase 3)
 ```
 
@@ -159,28 +159,28 @@ sequenceDiagram
     participant Arch as Architect
     participant SA as Security Architect
     participant CSO
-    
+
     User->>Arch: prd + requirements
-    
+
     Arch->>Arch: Detect project type
     Note over Arch: API/Mobile/Web/ML/etc.
-    
+
     Arch->>Arch: Select tech stack
     Arch->>Arch: Generate architecture
-    
+
     Arch->>SA: Request security design
     SA->>SA: Apply Zero Trust principles
     SA->>SA: STRIDE threat modeling
     SA->>SA: Generate security controls
     SA->>SA: Generate BDD stories
     SA-->>Arch: Security architecture + BDD stories
-    
+
     opt Executive Review
         SA->>CSO: Security concerns
         CSO->>CSO: Prioritize BDD stories by risk
         CSO-->>SA: Strategic priorities
     end
-    
+
     Arch->>Arch: Integrate security
     Arch-->>User: Architecture Document (→ Phase 4)
 ```
@@ -195,7 +195,7 @@ sequenceDiagram
     participant UX as UX Designer
     participant SM as Scrum Master
     participant Dev as Developer
-    
+
     par UX Design Path
         User->>UX: prd + architecture
         UX->>UX: Apply Design Thinking
@@ -214,7 +214,7 @@ sequenceDiagram
         SM->>SM: Sprint planning
         SM-->>User: Developer Stories
     end
-    
+
     User->>Dev: stories + architecture
     Dev-->>User: Ready for Phase 5
 ```
@@ -228,22 +228,22 @@ sequenceDiagram
     participant User
     participant Dev as Developer
     participant SA as Security Architect
-    
+
     User->>Dev: story + architecture + context
-    
+
     Dev->>Dev: Analyze story
     Dev->>Dev: Generate implementation plan
     Dev->>Dev: Identify dependencies
     Dev->>Dev: Create code structure
-    
+
     opt Security-sensitive code
         Dev->>SA: Request security guidance
         SA-->>Dev: Security patterns + BDD tests
     end
-    
+
     Dev->>Dev: Generate code guidance
     Dev->>Dev: Create quality checklist
-    
+
     Dev-->>User: Implementation Plan
     Dev-->>User: Code Guidance
     Dev-->>User: QA Checklist (→ Phase 6)
@@ -259,7 +259,7 @@ sequenceDiagram
     participant TEA as Test Architect
     participant STA as Security Test Analyst
     participant SA as Security Architect
-    
+
     par Quality Assurance Path
         User->>TEA: implementation + architecture
         TEA->>TEA: Generate test strategy
@@ -278,13 +278,13 @@ sequenceDiagram
         STA->>STA: Generate compliance matrix
         STA-->>User: BDD Test Suite
     end
-    
+
     opt Security Validation
         STA->>SA: Share test results
         SA->>SA: Validate security controls
         SA-->>STA: Approval/Remediation
     end
-    
+
     TEA-->>User: Quality Report
     STA-->>User: Security Report
 ```
@@ -300,7 +300,7 @@ sequenceDiagram
     participant STA as Security Test Analyst
     participant Dev as Developer
     participant TEA as Test Architect
-    
+
     %% Strategic Level
     CSO->>CSO: Define security strategy
     CSO->>CSO: Prioritize BDD stories by risk
@@ -308,21 +308,21 @@ sequenceDiagram
     CSO->>CSO: P2: High (3-6 months)
     CSO->>CSO: P3: Medium (6-12 months)
     CSO-->>SA: Strategic priorities
-    
+
     %% Design Level
     SA->>SA: Design security architecture
     SA->>SA: Generate BDD security stories
     SA->>SA: Map to compliance frameworks
     SA-->>STA: BDD stories + architecture
     SA-->>Dev: Security patterns
-    
+
     %% Testing Level
     STA->>STA: Parse BDD stories
     STA->>STA: Generate Gherkin scenarios
     STA->>STA: Create test automation
     STA->>STA: Map to CIS, NIST, ISO
     STA-->>TEA: Security test suite
-    
+
     %% Implementation & Validation
     Dev->>Dev: Implement with security patterns
     TEA->>TEA: Run all tests (security + quality)
@@ -340,14 +340,14 @@ sequenceDiagram
     participant Gherkin as Gherkin Generator
     participant AutoCode as Test Automation
     participant Frameworks as Compliance Mapper
-    
+
     User->>STA: BDD story
     Note over User,STA: "As a CISO, I want MFA..."
-    
+
     STA->>STA: Parse story format
     STA->>STA: Extract role, goal, benefit
     STA->>STA: Identify control type (IAM/Data/Network)
-    
+
     STA->>Gherkin: Generate test scenarios
     Gherkin->>Gherkin: Feature: MFA Enforcement
     Gherkin->>Gherkin: Scenario 1: Successful with MFA
@@ -355,19 +355,19 @@ sequenceDiagram
     Gherkin->>Gherkin: Scenario 3: Invalid MFA code
     Gherkin->>Gherkin: Scenario 4: Bypass detection
     Gherkin-->>STA: Gherkin scenarios
-    
+
     STA->>AutoCode: Generate test code
     AutoCode->>AutoCode: Python/pytest-bdd
     AutoCode->>AutoCode: JavaScript/Cucumber
     AutoCode->>AutoCode: Go/godog
     AutoCode-->>STA: Executable tests
-    
+
     STA->>Frameworks: Map to compliance
     Frameworks->>Frameworks: CIS 6.3
     Frameworks->>Frameworks: NIST PR.AC-7
     Frameworks->>Frameworks: ISO A.9.4.2
     Frameworks-->>STA: Framework mapping
-    
+
     STA->>STA: Generate compliance matrix
     STA-->>User: Complete test package
 ```
@@ -376,15 +376,15 @@ sequenceDiagram
 
 ## Agent Interaction Matrix
 
-| Phase | Primary Agent | Supporting Agents | Output | Next Phase Input |
-|-------|--------------|-------------------|--------|------------------|
-| 1️⃣ Ideation | Analyst | - | Project Brief | PM |
-| 2️⃣ Requirements | Product Manager | - | PRD/GDD | Architect, UX |
-| 3️⃣ Architecture | Architect | Security Architect, CSO | Architecture Doc | UX, Scrum Master, Developer |
-| 4️⃣ Design | UX Designer, Scrum Master | - | UX Design + Stories | Developer |
-| 5️⃣ Implementation | Developer | Security Architect | Code + Guidance | TEA, STA |
-| 6️⃣ Testing | Test Architect, Security Test Analyst | Security Architect | Test Reports | Deployment |
-| 🔒 Security (Continuous) | Security Architect, STA, CSO | All agents | Security posture | All phases |
+| Phase                    | Primary Agent                         | Supporting Agents       | Output              | Next Phase Input            |
+| ------------------------ | ------------------------------------- | ----------------------- | ------------------- | --------------------------- |
+| 1️⃣ Ideation              | Analyst                               | -                       | Project Brief       | PM                          |
+| 2️⃣ Requirements          | Product Manager                       | -                       | PRD/GDD             | Architect, UX               |
+| 3️⃣ Architecture          | Architect                             | Security Architect, CSO | Architecture Doc    | UX, Scrum Master, Developer |
+| 4️⃣ Design                | UX Designer, Scrum Master             | -                       | UX Design + Stories | Developer                   |
+| 5️⃣ Implementation        | Developer                             | Security Architect      | Code + Guidance     | TEA, STA                    |
+| 6️⃣ Testing               | Test Architect, Security Test Analyst | Security Architect      | Test Reports        | Deployment                  |
+| 🔒 Security (Continuous) | Security Architect, STA, CSO          | All agents              | Security posture    | All phases                  |
 
 ---
 
@@ -416,7 +416,7 @@ graph TD
     S --> U[Security Report]
     T --> V[Deployment Ready]
     U --> V
-    
+
     style A fill:#e1f5ff
     style V fill:#d4edda
     style G fill:#fff3cd
@@ -436,12 +436,12 @@ sequenceDiagram
     participant Gemini as Gemini CLI
     participant MCP as MCP Server
     participant Agent as JAGENTS Agent
-    
+
     User->>Gemini: /mcp (list agents)
     Gemini->>MCP: ListTools request
     MCP-->>Gemini: Available agents (10)
     Gemini-->>User: Display agent list
-    
+
     User->>Gemini: Call jagents_analyst
     Gemini->>MCP: CallTool request
     MCP->>Agent: execute(input)
@@ -449,6 +449,79 @@ sequenceDiagram
     Agent-->>MCP: Result
     MCP-->>Gemini: Tool response
     Gemini-->>User: Display output
+```
+
+---
+
+## New Workflows (BMGD & CIS)
+
+### 1. BMGD Game Development Pipeline
+
+```mermaid
+graph LR
+    A[Preproduction] --> B[Game Design]
+    B --> C[Technical Arch]
+    C --> D[Production]
+
+    subgraph Preproduction
+    A1[Concept] --> A2[Market Analysis] --> A3[Game Brief]
+    end
+
+    subgraph Game Design
+    B1[Core Loop] --> B2[Mechanics] --> B3[Level Design] --> B4[GDD]
+    end
+
+    subgraph Production
+    D1[Planning] --> D2[Development] --> D3[Testing] --> D4[Review]
+    D4 --> D1
+    end
+```
+
+### 2. CIS Innovation & Ideation Loop
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant IO as Innovation Oracle
+    participant BC as Brainstorm Coach
+    participant DTC as Design Thinking Coach
+
+    U->>IO: Request Strategy (Blue Ocean)
+    IO->>IO: Analyze Competitors
+    IO-->>U: Strategy Canvas & Opps
+
+    U->>BC: Brainstorm Ideas
+    BC->>BC: Diverge (Free Assoc)
+    BC->>BC: Converge (Selection)
+    BC-->>U: Top 3 Concepts
+
+    U->>DTC: Refine Concept
+    DTC->>DTC: Define -> Ideate -> Prototype
+    DTC-->>U: Tested Prototype Spec
+```
+
+### 3. Party Mode Collaboration
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant Party as Party Workflow
+    participant A1 as Analyst
+    participant A2 as Architect
+    participant A3 as CSO
+
+    U->>Party: Start Party (Topic: New FinTech App)
+    Party->>A1: Round 1: Analysis
+    A1-->>Party: Project Brief
+
+    Party->>A2: Round 2: Architecture
+    A2-->>Party: System Design
+
+    Party->>A3: Round 3: Security Review
+    A3-->>Party: Threat Model
+
+    Party->>Party: Synthesize Results
+    Party-->>U: Collaborative Report
 ```
 
 ---

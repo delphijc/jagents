@@ -6,15 +6,15 @@
 
 [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-blue)](https://modelcontextprotocol.io)
 [![Platforms](https://img.shields.io/badge/Platforms-5-green)](#platform-compatibility)
-[![Tools](https://img.shields.io/badge/Tools-30-orange)](#architecture)
+[![Tools](https://img.shields.io/badge/Tools-52-orange)](#architecture)
 
 ---
 
 ## Overview
 
-JAGENTS is a comprehensive framework for AI-assisted development, providing 30 specialized MCP tools across 4 independent servers. Built on the Agile method and designed for platform portability, it enables structured, security-first development workflows across all major AI coding platforms.
+JAGENTS is a comprehensive framework for AI-assisted development, providing **52 specialized MCP tools** across 4 independent servers. Built on the Agile method and designed for platform portability, it enables structured, security-first development workflows across all major AI coding platforms.
 
-**Architecture:** 4 independent MCP servers providing 30 specialized tools (10 agents, 9 skills, 5 workflows, 6 rules) for coordinated, composable AI-assisted development.
+**Architecture:** 4 independent MCP servers providing 52 specialized tools (17 agents, 12 skills, 17 workflows, 6 rules) for coordinated, composable AI-assisted development.
 
 ---
 
@@ -22,13 +22,13 @@ JAGENTS is a comprehensive framework for AI-assisted development, providing 30 s
 
 JAGENTS works seamlessly across all major AI coding platforms through the Model Context Protocol (MCP).
 
-| Platform | Provider | MCP Support | Integration Guide | Status |
-|----------|----------|-------------|-------------------|--------|
-| **Gemini CLI** | Google | ✅ Native | [Setup Guide](./integrations/gemini-cli/README.md) | ✅ Tested |
-| **Antigravity** | Google Deepmind | ✅ Native | [Setup Guide](./integrations/antigravity/README.md) | ✅ Tested |
-| **Claude Code** | Anthropic | ✅ Native | [Setup Guide](./integrations/claude-code/README.md) | ✅ Ready |
-| **Kiro AI** | Kiro | ✅ Native | [Setup Guide](./integrations/kiro/README.md) | ✅ Ready |
-| **Qwen Code** | Alibaba | ✅ SDK | [Setup Guide](./integrations/qwen-code/README.md) | ✅ Ready |
+| Platform        | Provider        | MCP Support | Integration Guide                                   | Status    |
+| --------------- | --------------- | ----------- | --------------------------------------------------- | --------- |
+| **Gemini CLI**  | Google          | ✅ Native   | [Setup Guide](./integrations/gemini-cli/README.md)  | ✅ Tested |
+| **Antigravity** | Google Deepmind | ✅ Native   | [Setup Guide](./integrations/antigravity/README.md) | ✅ Tested |
+| **Claude Code** | Anthropic       | ✅ Native   | [Setup Guide](./integrations/claude-code/README.md) | ✅ Ready  |
+| **Kiro AI**     | Kiro            | ✅ Native   | [Setup Guide](./integrations/kiro/README.md)        | ✅ Ready  |
+| **Qwen Code**   | Alibaba         | ✅ SDK      | [Setup Guide](./integrations/qwen-code/README.md)   | ✅ Ready  |
 
 **Universal:** Works with any MCP-compatible AI assistant through standard configuration.
 
@@ -49,45 +49,39 @@ cd jagents/jagents-mcp-servers
 Choose your AI platform and follow the integration guide:
 
 **Gemini CLI / Antigravity:**
+
 ```bash
-BASE="/path/to/jagents/jagents-mcp-servers"
-gemini mcp add jagents-agents node "$BASE/agents-mcp-server/dist/index.js"
-gemini mcp add jagents-skills node "$BASE/skills-mcp-server/dist/index.js"
-gemini mcp add jagents-workflows node "$BASE/workflows-mcp-server/dist/index.js"
-gemini mcp add jagents-rules node "$BASE/rules-mcp-server/dist/index.js"
+BASE="/opt/homebrew/bin "
+gemini mcp add jagents-agents node "$BASE/jagents-agents"
+gemini mcp add jagents-skills node "$BASE/jagents-skills"
+gemini mcp add jagents-workflows node "$BASE/jagents-workflows"
+gemini mcp add jagents-rules node "$BASE/jagents-rules"
 ```
 
 **Claude Desktop:**
 Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
 ```json
 {
   "mcpServers": {
     "jagents-agents": {
       "command": "node",
-      "args": [
-        "/opt/homebrew/lib/node_modules/@jagents/agents-mcp-server/dist/index.js"
-      ],
-      "description": "10 Agile method development agents"
+      "args": ["/opt/homebrew/bin/jagents-agents"],
+      "description": "17 Agile method development agents"
     },
     "jagents-workflows": {
       "command": "node",
-      "args": [
-        "/opt/homebrew/lib/node_modules/@jagents/workflows-mcp-server/dist/index.js"
-      ],
-      "description": "5 multi-step orchestration workflows"
+      "args": ["/opt/homebrew/bin/jagents-workflows"],
+      "description": "17 multi-step orchestration workflows"
     },
     "jagents-skills": {
       "command": "node",
-      "args": [
-        "/opt/homebrew/lib/node_modules/@jagents/skills-mcp-server/dist/index.js"
-      ],
-      "description": "9 reusable capability skills"
+      "args": ["/opt/homebrew/bin/jagents-skills"],
+      "description": "12 reusable capability skills"
     },
     "jagents-rules": {
       "command": "node",
-      "args": [
-        "/opt/homebrew/lib/node_modules/@jagents/rules-mcp-server/dist/index.js"
-      ],
+      "args": ["/opt/homebrew/bin/jagents-rules"],
       "description": "6 architectural and security rule validators"
     }
   }
@@ -102,7 +96,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
 List all JAGENTS MCP tools
 ```
 
-Expected: 30 tools across 4 servers
+Expected: 52 tools across 4 servers
 
 ---
 
@@ -121,19 +115,20 @@ JAGENTS 2.0 - Modular MCP Architecture
     ▼                      ▼
 ┌─────────────┐      ┌──────────────┐
 │   Agents    │─────▶│  Workflows   │
-│  (10 tools) │      │  (5 tools)   │
+│  (17 tools) │      │  (17 tools)  │
 └──────┬──────┘      └──────┬───────┘
        │                    │
        ▼                    ▼
 ┌─────────────┐      ┌──────────────┐
 │   Skills    │      │    Rules     │
-│  (9 tools)  │      │  (6 tools)   │
+│  (12 tools) │      │  (6 tools)   │
 └─────────────┘      └──────────────┘
 ```
 
-### 30 MCP Tools
+### 52 MCP Tools
 
-#### Agents (10) - Core Development Roles
+#### Agents (17) - Core Development Roles
+
 - `jagents_analyst` - Ideation & brainstorming
 - `jagents_product_manager` - Requirements & PRD
 - `jagents_architect` - System architecture
@@ -144,8 +139,16 @@ JAGENTS 2.0 - Modular MCP Architecture
 - `jagents_security_architect` - Security design
 - `jagents_security_test_analyst` - BDD security testing
 - `jagents_cso` - Executive security strategy
+- **NEW** `jagents_cis_brainstorming_coach` - Facilitate ideation (Carson)
+- **NEW** `jagents_cis_design_thinking_coach` - User-centric design (Maya)
+- **NEW** `jagents_cis_problem_solving_coach` - Root cause analysis (Dr. Quinn)
+- **NEW** `jagents_cis_innovation_oracle` - Strategic frameworks (Victor)
+- **NEW** `jagents_cis_master_storyteller` - Narrative development (Sophia)
+- **NEW** `jagents_technical_writer` - Documentation specialist (Paige)
+- **NEW** `jagents_quick_flow_solo_dev` - Rapid prototyping (Barry)
 
 #### Skills (9) - Reusable Capabilities
+
 - `jagents_skill_brainstorming` - Creative ideation
 - `jagents_skill_design_thinking` - 5-phase UX process
 - `jagents_skill_research` - Deep information gathering
@@ -157,6 +160,7 @@ JAGENTS 2.0 - Modular MCP Architecture
 - `jagents_skill_life_management` - Personal productivity
 
 #### Workflows (5) - Multi-Step Orchestration
+
 - `jagents_workflow_six_thinking_hats` - 6-perspective analysis
 - `jagents_workflow_five_ws` - Structured questioning
 - `jagents_workflow_scale_adaptive_planning` - Auto track selection
@@ -164,12 +168,86 @@ JAGENTS 2.0 - Modular MCP Architecture
 - `jagents_workflow_enterprise_security_assessment` - Full security audit
 
 #### Rules (6) - Validation & Compliance
+
 - `jagents_rule_platform_portability` - Cross-platform validation
 - `jagents_rule_modular_architecture` - SOLID principles
 - `jagents_rule_mandatory_context_loading` - Context requirements
 - `jagents_rule_multi_org_isolation` - Multi-tenant security
 - `jagents_rule_cloud_storage_sync` - Storage sync validation
 - `jagents_rule_zero_trust_architecture` - Zero Trust compliance
+
+---
+
+## Visual Workflows (Mermaid)
+
+### 1. BMGD Game Development Pipeline
+
+```mermaid
+graph LR
+    A[Preproduction] --> B[Game Design]
+    B --> C[Technical Arch]
+    C --> D[Production]
+
+    subgraph Preproduction
+    A1[Concept] --> A2[Market Analysis] --> A3[Game Brief]
+    end
+
+    subgraph Game Design
+    B1[Core Loop] --> B2[Mechanics] --> B3[Level Design] --> B4[GDD]
+    end
+
+    subgraph Production
+    D1[Planning] --> D2[Development] --> D3[Testing] --> D4[Review]
+    D4 --> D1
+    end
+```
+
+### 2. CIS Innovation & Ideation Loop
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant IO as Innovation Oracle
+    participant BC as Brainstorm Coach
+    participant DTC as Design Thinking Coach
+
+    U->>IO: Request Strategy (Blue Ocean)
+    IO->>IO: Analyze Competitors
+    IO-->>U: Strategy Canvas & Opps
+
+    U->>BC: Brainstorm Ideas
+    BC->>BC: Diverge (Free Assoc)
+    BC->>BC: Converge (Selection)
+    BC-->>U: Top 3 Concepts
+
+    U->>DTC: Refine Concept
+    DTC->>DTC: Define -> Ideate -> Prototype
+    DTC-->>U: Tested Prototype Spec
+```
+
+### 3. Party Mode Collaboration
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant Party as Party Workflow
+    participant A1 as Analyst
+    participant A2 as Architect
+    participant A3 as CSO
+
+    U->>Party: Start Party (Topic: New FinTech App)
+    Party->>A1: Round 1: Analysis
+    A1-->>Party: Project Brief
+
+    Party->>A2: Round 2: Architecture
+    A2-->>Party: System Design
+
+    Party->>A3: Round 3: Security Review
+    A3-->>Party: Threat Model
+
+    Party->>Party: Synthesize Results
+    Party-->>U: Collaborative Report
+```
 
 ---
 
@@ -220,29 +298,34 @@ See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for complete examples.
 ## Key Features
 
 ### 🔐 Security-First
+
 - Built-in Zero Trust validation
 - BDD security testing
 - Multi-framework compliance (NIST, ISO, SOC2)
 - Enterprise security assessment
 
 ### 🎯 Scale-Adaptive
+
 - Automatic complexity detection
 - 3 planning tracks (Quick/Agile/Enterprise)
 - Context-appropriate depth
 
 ### 🧩 Modular & Composable
+
 - 4 independent MCP servers
 - Skills callable by any agent
 - Workflows orchestrate skills
 - Rules validate architecture
 
 ### 🌐 Platform Agnostic
+
 - Works on 5+ AI platforms
 - Standard MCP protocol
 - No vendor lock-in
 - Universal configuration
 
 ### 📊 Production Ready
+
 - TypeScript with full type safety
 - Comprehensive documentation
 - 0 build errors
@@ -269,16 +352,19 @@ Any MCP-compatible platform can use JAGENTS. See [MCP Protocol Documentation](ht
 ## Documentation
 
 ### Core Documentation
+
 - **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** - Complete setup & configuration
 - **[WORKFLOW_DIAGRAMS.md](./jagents-mcp-servers/agents-mcp-server/WORKFLOW_DIAGRAMS.md)** - Visual workflow diagrams
 
 ### Server Documentation
+
 - **[Agents MCP Server](./jagents-mcp-servers/agents-mcp-server/README.md)**
 - **[Skills MCP Server](./jagents-mcp-servers/skills-mcp-server/README.md)**
 - **[Workflows MCP Server](./jagents-mcp-servers/workflows-mcp-server/README.md)**
 - **[Rules MCP Server](./jagents-mcp-servers/rules-mcp-server/README.md)**
 
 ### Integration Guides
+
 - Platform-specific setup instructions
 - Configuration examples
 - Usage examples
@@ -294,9 +380,9 @@ jagents/
 ├── DEPLOYMENT_GUIDE.md              # Complete deployment guide
 ├── jagents-mcp-servers/             # MCP server implementations
 │   ├── build-all.sh                 # Build all servers
-│   ├── agents-mcp-server/           # 10 development agents
-│   ├── skills-mcp-server/           # 9 reusable skills
-│   ├── workflows-mcp-server/        # 5 orchestration workflows
+│   ├── agents-mcp-server/           # 17 development agents
+│   ├── skills-mcp-server/           # 12 reusable skills
+│   ├── workflows-mcp-server/        # 17 orchestration workflows
 │   └── rules-mcp-server/            # 6 validation rules
 ├── integrations/                     # Platform integration guides
 │   ├── gemini-cli/
@@ -315,24 +401,28 @@ jagents/
 ## Use Cases
 
 ### Software Development
+
 - Feature ideation to deployment
 - Architecture design & validation
 - Security-first development
 - Agile sprint planning
 
 ### Security Engineering
+
 - Zero Trust architecture validation
 - Compliance assessment (NIST, ISO, SOC2)
 - BDD security testing
 - Multi-organization isolation
 
 ### Enterprise Projects
+
 - Large-scale system design
 - Multi-framework compliance
 - GRC management
 - DevSecOps integration
 
 ### Personal Projects
+
 - Scale-adaptive planning
 - Research & content creation
 - Life management
@@ -343,7 +433,7 @@ jagents/
 ## Requirements
 
 - **Node.js** v18 or higher
-- **npm** v9 or higher  
+- **npm** v9 or higher
 - **AI Platform** with MCP support
 
 ---
@@ -351,6 +441,7 @@ jagents/
 ## Contributing
 
 Contributions welcome! Please:
+
 1. Follow the modular architecture
 2. Use TypeScript with strict mode
 3. Document all MCP tools

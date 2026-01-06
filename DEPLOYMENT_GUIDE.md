@@ -46,6 +46,7 @@ cd /path/to/jagents/jagents-mcp-servers
 ```
 
 This will:
+
 1. Install dependencies for all 4 servers
 2. Build TypeScript to JavaScript
 3. Create global symlinks for easy access
@@ -116,6 +117,7 @@ Update `~/.gemini/settings.json` to use the globally installed commands:
 ```
 
 **Benefits of Global Installation:**
+
 - ✅ Access from any directory
 - ✅ No hardcoded absolute paths
 - ✅ Works across all projects
@@ -169,6 +171,7 @@ gemini mcp list
 ```
 
 Expected output:
+
 ```
 jagents-agents
 jagents-workflows
@@ -187,30 +190,22 @@ Alternatively, add to `~/.gemini/settings.json`:
   "mcpServers": {
     "jagents-agents": {
       "command": "node",
-      "args": [
-        "/opt/homebrew/lib/node_modules/@jagents/agents-mcp-server/dist/index.js"
-      ],
-      "description": "10 Agile method development agents"
+      "args": ["/opt/homebrew/bin/jagents-agents"],
+      "description": "17 Agile method development agents"
     },
     "jagents-workflows": {
       "command": "node",
-      "args": [
-        "/opt/homebrew/lib/node_modules/@jagents/workflows-mcp-server/dist/index.js"
-      ],
-      "description": "5 multi-step orchestration workflows"
+      "args": ["/opt/homebrew/bin/jagents-workflows"],
+      "description": "17 multi-step orchestration workflows"
     },
     "jagents-skills": {
       "command": "node",
-      "args": [
-        "/opt/homebrew/lib/node_modules/@jagents/skills-mcp-server/dist/index.js"
-      ],
-      "description": "9 reusable capability skills"
+      "args": ["/opt/homebrew/bin/jagents-skills"],
+      "description": "12 reusable capability skills"
     },
     "jagents-rules": {
       "command": "node",
-      "args": [
-        "/opt/homebrew/lib/node_modules/@jagents/rules-mcp-server/dist/index.js"
-      ],
+      "args": ["/opt/homebrew/bin/jagents-rules"],
       "description": "6 architectural and security rule validators"
     }
   }
@@ -224,10 +219,11 @@ Alternatively, add to `~/.gemini/settings.json`:
 ### 1. Agents MCP Server
 
 **Port:** stdio  
-**Tools:** 10  
+**Tools:** 17  
 **Purpose:** Core Agile method development agents
 
 **Available Agents:**
+
 - `jagents_analyst` - Ideation & brainstorming
 - `jagents_product_manager` - Requirements & PRD
 - `jagents_architect` - System architecture
@@ -238,8 +234,18 @@ Alternatively, add to `~/.gemini/settings.json`:
 - `jagents_security_architect` - Security design
 - `jagents_security_test_analyst` - BDD security testing
 - `jagents_cso` - Executive security strategy
+- **CIS Agents:**
+  - `jagents_cis_brainstorming_coach` - Facilitate ideation
+  - `jagents_cis_design_thinking_coach` - User-centric design
+  - `jagents_cis_problem_solving_coach` - Root cause analysis
+  - `jagents_cis_innovation_oracle` - Strategic frameworks
+  - `jagents_cis_master_storyteller` - Narrative development
+- **Audit Agents:**
+  - `jagents_technical_writer` - Documentation specialist
+  - `jagents_quick_flow_solo_dev` - Rapid prototyping MVP
 
 **Example Usage:**
+
 ```bash
 gemini run jagents_analyst userIdea="AI code reviewer" workflow="six-thinking-hats"
 ```
@@ -249,17 +255,34 @@ gemini run jagents_analyst userIdea="AI code reviewer" workflow="six-thinking-ha
 ### 2. Workflows MCP Server
 
 **Port:** stdio  
-**Tools:** 5  
+**Tools:** 17  
 **Purpose:** Multi-step orchestration processes
 
 **Available Workflows:**
+
 - `jagents_workflow_six_thinking_hats` - Multi-perspective analysis
 - `jagents_workflow_five_ws` - Structured questioning
 - `jagents_workflow_scale_adaptive_planning` - Complexity-based planning
 - `jagents_workflow_extensive_research` - Deep research process
 - `jagents_workflow_enterprise_security_assessment` - Security evaluation
+- **BMGD Workflows:**
+  - `jagents_workflow_bmgd_preproduction` - Concept & Brief
+  - `jagents_workflow_bmgd_game_design` - Mechanics & Levels
+  - `jagents_workflow_bmgd_technical` - Architecture & Stack
+  - `jagents_workflow_bmgd_production` - Dev Loop
+- **CIS Workflows:**
+  - `jagents_workflow_cis_brainstorming`
+  - `jagents_workflow_cis_design_thinking`
+  - `jagents_workflow_cis_innovation_strategy`
+  - `jagents_workflow_cis_problem_solving`
+  - `jagents_workflow_cis_storytelling`
+- **Core Workflows:**
+  - `jagents_workflow_advanced_elicitation`
+  - `jagents_workflow_party_mode`
+  - `jagents_workflow_quick_flow`
 
 **Example Usage:**
+
 ```bash
 gemini run jagents_workflow_six_thinking_hats topic="Microservices migration"
 ```
@@ -269,10 +292,11 @@ gemini run jagents_workflow_six_thinking_hats topic="Microservices migration"
 ### 3. Skills MCP Server
 
 **Port:** stdio  
-**Tools:** 9  
+**Tools:** 12  
 **Purpose:** Reusable capabilities
 
 **Available Skills:**
+
 - `jagents_skill_brainstorming` - Creative ideation
 - `jagents_skill_design_thinking` - User-centered design
 - `jagents_skill_research` - Information gathering
@@ -282,8 +306,12 @@ gemini run jagents_workflow_six_thinking_hats topic="Microservices migration"
 - `jagents_skill_content_creation` - Documentation generation
 - `jagents_skill_image_creation` - Visual asset specs
 - `jagents_skill_life_management` - Personal productivity
+- `jagents_skill_core_tasks` - Indexing & Review
+- `jagents_skill_cis_innovation_strategy` - Strategy canvas
+- `jagents_skill_cis_problem_solving` - Root cause analysis
 
 **Example Usage:**
+
 ```bash
 gemini run jagents_skill_research topic="Zero Trust Architecture" depth="extensive"
 ```
@@ -297,6 +325,7 @@ gemini run jagents_skill_research topic="Zero Trust Architecture" depth="extensi
 **Purpose:** Architectural and security validation
 
 **Available Rules:**
+
 - `jagents_rule_platform_portability` - Cross-platform validation
 - `jagents_rule_modular_architecture` - SOLID principles check
 - `jagents_rule_mandatory_context_loading` - Context requirements
@@ -305,6 +334,7 @@ gemini run jagents_skill_research topic="Zero Trust Architecture" depth="extensi
 - `jagents_rule_zero_trust_architecture` - Zero Trust compliance
 
 **Example Usage:**
+
 ```bash
 gemini run jagents_rule_zero_trust_architecture architecture="..." controls='["mfa", "segmentation"]'
 ```
@@ -490,6 +520,7 @@ Each server uses ~50-100MB RAM when active. All 4 servers: ~300MB total.
 ### Production Deployment
 
 If deploying remotely:
+
 - Add authentication layer
 - Use TLS for transport
 - Implement rate limiting

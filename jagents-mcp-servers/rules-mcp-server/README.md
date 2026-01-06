@@ -27,11 +27,13 @@ The server runs on stdio and communicates via MCP protocol.
 ### Available Rules
 
 #### 1. Platform Portability
+
 **Tool:** `jagents_rule_platform_portability`
 
 Validates cross-platform compatibility (web, mobile, desktop, cloud).
 
 **Checks:**
+
 - Platform-agnostic architecture
 - Browser compatibility
 - Mobile platform support (iOS/Android)
@@ -41,11 +43,13 @@ Validates cross-platform compatibility (web, mobile, desktop, cloud).
 ---
 
 #### 2. Modular Architecture
+
 **Tool:** `jagents_rule_modular_architecture`
 
 Validates SOLID principles and modular design.
 
 **Checks:**
+
 - Single Responsibility
 - Open/Closed Principle
 - Liskov Substitution
@@ -56,11 +60,13 @@ Validates SOLID principles and modular design.
 ---
 
 #### 3. Mandatory Context Loading
+
 **Tool:** `jagents_rule_mandatory_context_loading`
 
 Ensures developers load necessary context before coding.
 
 **Required Context:**
+
 - Architecture documentation
 - Coding standards
 - Tech stack specifications
@@ -70,16 +76,19 @@ Ensures developers load necessary context before coding.
 ---
 
 #### 4. Multi-Organization Isolation
+
 **Tool:** `jagents_rule_multi_org_isolation`
 
 Validates multi-tenant data isolation.
 
 **Isolation Models:**
+
 - Database-per-tenant (Highest isolation)
 - Schema-per-tenant (Medium-high isolation)
 - Row-level security (Medium isolation)
 
 **Checks:**
+
 - Tenant ID in all tables
 - Access control policies
 - Cross-tenant prevention
@@ -88,16 +97,19 @@ Validates multi-tenant data isolation.
 ---
 
 #### 5. Cloud Storage Synchronization
+
 **Tool:** `jagents_rule_cloud_storage_sync`
 
 Validates cloud storage sync strategy.
 
 **Strategies:**
+
 - Real-time sync
 - Batch sync
 - Event-driven sync
 
 **Checks:**
+
 - Conflict resolution
 - Offline support
 - Delta synchronization
@@ -106,16 +118,19 @@ Validates cloud storage sync strategy.
 ---
 
 #### 6. Zero Trust Architecture
+
 **Tool:** `jagents_rule_zero_trust_architecture`
 
 Validates Zero Trust security principles (NIST SP 800-207).
 
 **Principles:**
+
 - Verify explicitly (MFA, continuous auth)
 - Least privilege access (RBAC, ABAC)
 - Assume breach (segmentation, encryption)
 
 **Components:**
+
 - Identity & Access Management
 - Network segmentation
 - Endpoint security
@@ -131,16 +146,17 @@ Validates Zero Trust security principles (NIST SP 800-207).
 Add to MCP servers:
 
 ```bash
-gemini mcp add jagents-rules node /path/to/rules-mcp-server/dist/index.js
+gemini mcp add jagents-rules node /opt/homebrew/bin/jagents-rules
 ```
 
 Or in `settings.json`:
+
 ```json
 {
   "mcpServers": {
     "jagents-rules": {
       "command": "node",
-      "args": ["/path/to/rules-mcp-server/dist/index.js"]
+      "args": ["/opt/homebrew/bin/jagents-rules"]
     }
   }
 }
@@ -151,6 +167,7 @@ Or in `settings.json`:
 ## Architecture
 
 Rules:
+
 - ✅ **Validation-focused** - Check compliance
 - ✅ **Stateless** - No persistence
 - ✅ **Informative** - Provide detailed reports

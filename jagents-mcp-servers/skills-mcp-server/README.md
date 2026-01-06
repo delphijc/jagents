@@ -27,14 +27,17 @@ The server runs on stdio and communicates via MCP protocol.
 ### Available Skills
 
 #### 1. Brainstorming
+
 **Tool:** `jagents_skill_brainstorming`
 
 Creative ideation with three methods:
+
 - Free-form: Unstructured idea generation
 - Structured: Categorized brainstorming
 - Brainwriting: 6-3-5 collaborative method
 
 **Example:**
+
 ```json
 {
   "name": "jagents_skill_brainstorming",
@@ -48,9 +51,11 @@ Creative ideation with three methods:
 ---
 
 #### 2. Design Thinking
+
 **Tool:** `jagents_skill_design_thinking`
 
 User-centered design process with 5 phases:
+
 - Empathize: Understand users
 - Define: Articulate the problem
 - Ideate: Generate solutions
@@ -60,9 +65,11 @@ User-centered design process with 5 phases:
 ---
 
 #### 3. Research
+
 **Tool:** `jagents_skill_research`
 
 Deep information gathering with three depth levels:
+
 - Quick: High-level overview
 - Standard: Comprehensive analysis
 - Extensive: Deep dive with comparisons
@@ -70,9 +77,11 @@ Deep information gathering with three depth levels:
 ---
 
 #### 4. Story Development
+
 **Tool:** `jagents_skill_story_development`
 
 Creates well-formed user stories with:
+
 - As-a / I-want / So-that format
 - Given-When-Then acceptance criteria
 - Story metadata and Definition of Done
@@ -80,9 +89,11 @@ Creates well-formed user stories with:
 ---
 
 #### 5. GRC Management
+
 **Tool:** `jagents_skill_grc_management`
 
 Governance, Risk, and Compliance management:
+
 - Gap analysis
 - Risk assessment
 - Compliance audit
@@ -92,10 +103,12 @@ Supports: NIST CSF, ISO 27001, SOC2, PCI-DSS, HIPAA
 ---
 
 #### 6. DevSecOps
+
 **Tool:** `jagents_skill_devsecops`
 
 Security integration for CI/CD pipelines:
-- SASTCheck  (Static code analysis)
+
+- SASTCheck (Static code analysis)
 - DAST (Dynamic testing)
 - SCA (Dependency scanning)
 - Container security
@@ -104,9 +117,11 @@ Security integration for CI/CD pipelines:
 ---
 
 #### 7. Content Creation
+
 **Tool:** `jagents_skill_content_creation`
 
 Generates professional content:
+
 - Documentation
 - README files
 - Tutorials
@@ -116,9 +131,11 @@ Generates professional content:
 ---
 
 #### 8. Image Creation
+
 **Tool:** `jagents_skill_image_creation`
 
 Visual asset specifications:
+
 - Mermaid diagrams
 - Wireframes
 - Icon descriptions
@@ -127,13 +144,32 @@ Visual asset specifications:
 ---
 
 #### 9. Life Management
+
 **Tool:** `jagents_skill_life_management`
 
 Personal productivity tools:
+
 - SMART goal setting
 - Time management (Eisenhower Matrix)
 - Habit tracking (30-day challenge)
 - Decision frameworks (Pros/Cons, 10-10-10)
+
+---
+
+#### 10. Core Tasks
+
+**Tool:** `jagents_skill_core_tasks`
+**Purpose:** Index docs, Adversarial review, Shard documents
+
+#### 11. CIS Innovation Strategy
+
+**Tool:** `jagents_skill_cis_innovation_strategy`
+**Purpose:** Apply Blue Ocean Strategy & Strategy Canvas
+
+#### 12. CIS Problem Solving
+
+**Tool:** `jagents_skill_cis_problem_solving`
+**Purpose:** Apply 5 Whys, Fishbone, Solution Matrix
 
 ---
 
@@ -144,16 +180,17 @@ Personal productivity tools:
 Add to MCP servers:
 
 ```bash
-gemini mcp add jagents-skills node /path/to/skills-mcp-server/dist/index.js
+gemini mcp add jagents-skills node /opt/homebrew/bin/jagents-skills
 ```
 
 Or in `settings.json`:
+
 ```json
 {
   "mcpServers": {
     "jagents-skills": {
       "command": "node",
-      "args": ["/path/to/skills-mcp-server/dist/index.js"]
+      "args": ["/opt/homebrew/bin/jagents-skills"]
     }
   }
 }
@@ -164,6 +201,7 @@ Or in `settings.json`:
 ## Architecture
 
 Skills are:
+
 - ✅ **Stateless** - No persistent state
 - ✅ **Composable** - Can be combined
 - ✅ **Reusable** - Called by any agent
