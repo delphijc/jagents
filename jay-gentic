@@ -1,0 +1,512 @@
+#!/bin/bash
+
+# jay-gentic - A simple CLI tool for chatting with LLM servers (Ollama or llama.cpp)
+# Usage: ./jay-gentic [OPTIONS]
+#
+# Options:
+#   --server <type>    Specify the server type: 'ollama' or 'llama.cpp' (default: llama.cpp)
+#   --model <name>     Specify the model name to use (required for Ollama, optional for llama.cpp)
+#   --url <url>        Specify the server URL (e.g., http://localhost:11434 for Ollama, http://localhost:8080 for llama.cpp)
+#   -h, --help         Display this help message
+#   --debug            Enable debug mode (show detailed script execution)
+#
+# Commands:
+#   /bye               Exit the chat.
+#   /clear             Clear conversation history.
+#   /read <filename>   Read content from a file and provide as context to the AI.
+#   /save <filename>   Save the last AI response to a file.
+#   /bash {command}    Execute a bash command and send its output as context to the AI.
+#   /run {command}     Execute a command or script and send its output as context to the AI.
+
+# Default values
+SERVER_TYPE="llama.cpp"
+MODEL_NAME=""
+SERVER_URL_DEFAULT_OLLAMA="http://localhost:11434"
+SERVER_URL_DEFAULT_LLAMACPP="http://localhost:8080"
+SERVER_URL="" # Will be set based on server type or --url
+MEMORY_FILE="jay-gentic-memory.jsonl"
+DEBUG_MODE=false
+ADDITIONAL_CONTEXT=""
+
+HELP_MESSAGE="Usage: $0 [OPTIONS]
+
+Options:
+  --server <type>    Specify the server type: 'ollama' or 'llama.cpp' (default: llama.cpp)
+  --model <name>     Specify the model name to use (required for Ollama, optional for llama.cpp)
+  --url <url>        Specify the server URL (e.g., http://localhost:11434 for Ollama, http://localhost:8080 for llama.cpp)
+  -h, --help         Display this help message
+  --debug            Enable debug mode (show detailed script execution)
+
+Commands:
+  /bye               Exit the chat.
+  /clear             Clear conversation history.
+  /read <filename>   Read content from a file and provide as context to the AI.
+  /save <filename>   Save the last AI response to a file.
+  /bash {command}    Execute a bash command and send its output as context to the AI.
+  /run {command}     Execute a command or script and send its output as context to the AI.
+"
+
+# Parse arguments
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --server)
+            if [ -z "$2" ] || [[ "$2" == -* ]]; then
+                echo "Error: --server requires an argument." >&2
+                echo "$HELP_MESSAGE"
+                exit 1
+            fi
+            SERVER_TYPE="$2"
+            shift 2
+            ;;
+        --model)
+            if [ -z "$2" ] || [[ "$2" == -* ]]; then
+                echo "Error: --model requires an argument." >&2
+                echo "$HELP_MESSAGE"
+                exit 1
+            fi
+            MODEL_NAME="$2"
+            shift 2
+            ;;
+        --url)
+            if [ -z "$2" ] || [[ "$2" == -* ]]; then
+                echo "Error: --url requires an argument." >&2
+                echo "$HELP_MESSAGE"
+                exit 1
+            fi
+            SERVER_URL="$2"
+            shift 2
+            ;;
+        -h|--help)
+            echo "$HELP_MESSAGE"
+            exit 0
+            ;;
+        --debug)
+            DEBUG_MODE=true
+            shift
+            ;;
+        *)
+            echo "Error: Unknown option: $1" >&2
+            echo "$HELP_MESSAGE"
+            exit 1
+            ;;
+    esac
+done
+
+if [ "$DEBUG_MODE" = "true" ]; then
+    set -x
+    echo "DEBUG: SERVER_URL after argument processing loop: '${SERVER_URL}'"
+fi
+
+# Set default URL if not provided
+if [ -z "$SERVER_URL" ]; then
+    case "$SERVER_TYPE" in
+        ollama)
+            SERVER_URL="$SERVER_URL_DEFAULT_OLLAMA"
+            ;;
+        llama.cpp)
+            SERVER_URL="$SERVER_URL_DEFAULT_LLAMACPP"
+            ;;
+        *)
+            echo "Error: Unknown server type '${SERVER_TYPE}'. Use 'ollama' or 'llama.cpp'." >&2
+            echo "$HELP_MESSAGE"
+            exit 1
+            ;;
+    esac
+fi
+
+# Validate Ollama model
+if [ "$SERVER_TYPE" = "ollama" ] && [ -z "$MODEL_NAME" ]; then
+    echo "Error: --model is required when --server is 'ollama'." >&2
+    echo "$HELP_MESSAGE"
+    exit 1
+fi
+
+# Check if server is reachable
+check_server() {
+    if [ "$DEBUG_MODE" = "true" ]; then
+        echo "DEBUG: SERVER_URL inside check_server: '${SERVER_URL}'"
+    fi
+
+    local health_endpoint
+    case "$SERVER_TYPE" in
+        ollama)
+            health_endpoint="${SERVER_URL}/api/tags" # Ollama uses /api/tags for a simple check
+            ;;
+        llama.cpp)
+            health_endpoint="${SERVER_URL}/health" # llama.cpp might use /health or /
+            ;;
+        *)
+            # This case should ideally be caught earlier by the server type validation
+            echo "Error: Unknown server type for health check." >&2
+            exit 1
+            ;;
+    esac
+
+    if ! curl -s "${health_endpoint}" > /dev/null 2>&1; then
+        echo "Error: Cannot connect to ${SERVER_TYPE} server at ${SERVER_URL}"
+        echo "Make sure the server is running, or provide a different URL/server type."
+        echo "$HELP_MESSAGE"
+        exit 1
+    fi
+}
+
+# Helper: Properly escape a string for JSON (handles all special characters)
+escape_for_json() {
+    local string="$1"
+
+    # Remove ANSI escape sequences FIRST (before other escaping)
+    # This prevents \x1b from corrupting JSON
+    string=$(printf "%s" "$string" | sed 's/\x1b\[[0-9;]*[mGKHflSTABCDE]//g')
+
+    # Now escape for JSON in the correct order:
+    # 1. Backslashes (must be first!)
+    string=$(printf "%s" "$string" | sed 's/\\/\\\\/g')
+    # 2. Double quotes
+    string=$(printf "%s" "$string" | sed 's/"/\\"/g')
+    # 3. Tabs to \t
+    string=$(printf "%s" "$string" | sed 's/	/\\t/g')
+    # 4. Actual newlines to \n (using printf to avoid echo issues)
+    string=$(printf "%s" "$string" | sed -e ':a' -e '$!{N;ba' -e '}' -e 's/\n/\\n/g')
+    # 5. Carriage returns
+    string=$(printf "%s" "$string" | sed 's/\r/\\r/g')
+
+    printf "%s" "$string"
+}
+
+# Helper: Extract argument from command (e.g., "/read filename" -> "filename")
+extract_command_arg() {
+    local input="$1"
+    echo "${input#* }"  # Remove first word and space
+}
+
+# Helper: Execute command and set ADDITIONAL_CONTEXT
+execute_and_set_context() {
+    local executor="$1"  # Either 'bash -c' or direct execution
+    local command="$2"
+    local label="$3"
+
+    local output exit_code
+
+    if [ "$executor" = "bash" ]; then
+        output=$(bash -c "$command" 2>&1)
+    else
+        output=$($command 2>&1)
+    fi
+    exit_code=$?
+
+    if [ $exit_code -eq 0 ]; then
+        ADDITIONAL_CONTEXT="Output of '$label':\n${output}"
+        echo "Command executed successfully. Output will be sent as context with your next message."
+    else
+        ADDITIONAL_CONTEXT="Error: '$label' failed with exit code $exit_code.\nOutput:\n${output}"
+        echo "Command failed with exit code $exit_code. Output will be sent as context with your next message."
+    fi
+}
+
+# Send message to LLM server and get response
+send_message() {
+    local messages_json="$1"
+    local response
+    local api_endpoint
+    local curl_data_payload
+    
+    case "$SERVER_TYPE" in
+        ollama)
+            api_endpoint="${SERVER_URL}/api/chat"
+            curl_data_payload="{
+                \"model\": \"${MODEL_NAME}\",
+                \"messages\": ${messages_json},
+                \"temperature\": 0.7,
+                \"stream\": false
+            }"
+            ;;
+        llama.cpp)
+            api_endpoint="${SERVER_URL}/v1/chat/completions"
+            curl_data_payload="{
+                \"messages\": ${messages_json},
+                \"temperature\": 0.7,
+                \"max_tokens\": -1,
+                \"stream\": false
+            }"
+            ;;
+        *)
+            echo "Error: Unknown server type for sending message." >&2
+            return 1
+            ;;
+    esac
+
+    response=$(curl -s "${api_endpoint}" \
+        -H "Content-Type: application/json" \
+        -d "${curl_data_payload}" 2>/dev/null)
+
+    if [ "$DEBUG_MODE" = "true" ]; then
+        echo "DEBUG: Raw LLM response: ${response}" >&2
+    fi
+    
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to communicate with server"
+        return 1
+    fi
+    
+    # Extract content from response using grep and sed
+    local content
+    # Extract content from response using sed
+    local content_escaped=$(echo "$response" | sed -n 's/.*"content":"\([^"]*\)".*/\1/p')
+    # Unescape newlines and escaped double quotes
+    local content=$(echo "$content_escaped" | sed -e 's/\\n/\n/g' -e 's/\\"/"/g')
+    
+    # If content is empty, report it. Otherwise, try to extract an error message.
+    if [ -z "$content" ]; then
+        local error_msg
+        error_msg=$(echo "$response" | grep -o '"error":{"message":"[^"]*"' | sed 's/.*"message":"//;s/"$//')
+        if [ -n "$error_msg" ]; then
+            echo "Server error: $error_msg"
+        else
+            # Explicitly report empty content from AI
+            echo "AI returned an empty response. Raw response: $response"
+        fi
+        return 1
+    fi
+    
+    echo "$content"
+}
+
+# Build messages JSON array from conversation history
+build_messages() {
+    local messages="["
+    local first=true
+    
+    # Filter out non-JSON lines before processing
+    while IFS= read -r line; do
+        [ -z "$line" ] && continue
+        
+        local role=$(echo "$line" | grep -o '"role":"[^"]*"' | sed 's/"role":"//;s/"$//')
+        local content=$(echo "$line" | grep -o '"content":"[^"]*"' | sed 's/"content":"//;s/"$//')
+        
+        # Unescape the content for JSON
+        content=$(echo "$content" | sed 's/\\"/"/g; s/\\\\/\\/g')
+        
+        if [ "$first" = true ]; then
+            first=false
+        else
+            messages="${messages},"
+        fi
+        
+        # Escape content for JSON
+        local escaped_content
+        escaped_content=$(echo "$content" | sed 's/\\/\\\\/g; s/"/\\"/g; s/\t/\\t/g')
+        messages="${messages}{\"role\":\"${role}\",\"content\":\"${escaped_content}\"}"
+    done <<< "$(grep -E '^\{"role":".*","content":".*"\}$' "$MEMORY_FILE")"
+    
+    messages="${messages}]"
+    echo "$messages"
+}
+
+# Main chat loop
+main() {
+    local last_assistant_response="" # Variable to store the last AI response for /save command
+    echo "jay-gentic - LLM Server CLI Client"
+    echo "Server Type: ${SERVER_TYPE}"
+    echo "Server URL: ${SERVER_URL}"
+    [ -n "$MODEL_NAME" ] && echo "Model: ${MODEL_NAME}"
+    echo "Memory file: ${MEMORY_FILE}"
+    echo ""
+    
+    # Check server connectivity
+    check_server
+    
+    # Create memory file if it doesn't exist, or clear it if in debug mode
+    if [ ! -f "$MEMORY_FILE" ]; then
+        touch "$MEMORY_FILE"
+    elif [ "$DEBUG_MODE" = "true" ]; then
+        > "$MEMORY_FILE"
+        echo "DEBUG: Cleared '$MEMORY_FILE' due to debug mode."
+    fi
+    
+    echo "Type your message and press Enter. Type /bye to quit."
+    echo "Type /clear to clear conversation history."
+    echo ""
+    
+    while true; do
+        # Get user input
+        local prompt_indicator="You: "
+        if [ -n "$ADDITIONAL_CONTEXT" ]; then
+            prompt_indicator="You (Context pending): "
+        fi
+        echo -n "$prompt_indicator"
+        read -r user_input
+        
+        # Check for exit command
+        if [ "$user_input" = "/bye" ]; then
+            echo "Goodbye!"
+            exit 0
+        fi
+        
+        # Check for clear command
+        if [ "$user_input" = "/clear" ]; then
+            > "$MEMORY_FILE"
+            echo "Conversation history cleared."
+            echo ""
+            continue
+        fi
+
+        # Check for read command
+        if [[ "$user_input" == "/read "* ]]; then
+            local filename=$(extract_command_arg "$user_input")
+            if [ -z "$filename" ]; then
+                echo "Error: /read requires a filename. Usage: /read <filename>"
+                continue
+            fi
+            if [ ! -e "$filename" ]; then
+                echo "Error: '$filename' does not exist."
+                continue
+            fi
+            if [ ! -f "$filename" ]; then
+                echo "Error: '$filename' is not a regular file (it's a directory or special file)."
+                continue
+            fi
+            if [ ! -r "$filename" ]; then
+                echo "Error: '$filename' is not readable. Check file permissions."
+                continue
+            fi
+
+            # Check file size (warn if very large)
+            local file_size=$(stat -f%z "$filename" 2>/dev/null || stat -c%s "$filename" 2>/dev/null)
+            if [ "$file_size" -gt 1048576 ]; then  # 1MB
+                echo "Warning: File is large ($(( file_size / 1024 ))KB). This may slow down processing."
+            fi
+
+            # Read file
+            ADDITIONAL_CONTEXT=$(cat "$filename" 2>/dev/null)
+            if [ $? -ne 0 ]; then
+                echo "Error: Failed to read '$filename'."
+                continue
+            fi
+
+            echo "✓ Read $(wc -c < "$filename") bytes from '$filename'"
+            echo "  This content will be sent as context with your next message."
+            continue
+        fi
+
+        # Check for save command
+        if [[ "$user_input" == "/save "* ]]; then
+            local filename=$(extract_command_arg "$user_input")
+            if [ -z "$filename" ]; then
+                echo "Error: /save requires a filename. Usage: /save <filename>"
+                continue
+            fi
+            if [ -z "$last_assistant_response" ]; then
+                echo "Error: No AI response to save yet. (Have you received a response from the AI?)"
+                continue
+            fi
+
+            # Check if file already exists
+            if [ -e "$filename" ]; then
+                if [ ! -w "$filename" ]; then
+                    echo "Error: '$filename' exists but is not writable. Check permissions."
+                    continue
+                fi
+                echo "Note: Overwriting existing file '$filename'"
+            fi
+
+            # Check if directory is writable
+            local dir=$(dirname "$filename")
+            if [ "$dir" = "." ]; then
+                dir="$(pwd)"
+            fi
+            if [ ! -d "$dir" ]; then
+                echo "Error: Directory '$dir' does not exist."
+                continue
+            fi
+            if [ ! -w "$dir" ]; then
+                echo "Error: Directory '$dir' is not writable. Check permissions."
+                continue
+            fi
+
+            # Save the response
+            if echo "$last_assistant_response" > "$filename" 2>/dev/null; then
+                local saved_size=$(wc -c < "$filename")
+                echo "✓ AI response saved to '$filename' ($(( saved_size )) bytes)"
+            else
+                echo "Error: Failed to write to '$filename'. Check disk space and permissions."
+                continue
+            fi
+            continue
+        fi
+
+        # Check for bash command
+        if [[ "$user_input" == "/bash "* ]]; then
+            local command=$(extract_command_arg "$user_input")
+            if [ -z "$command" ]; then
+                echo "Error: /bash command requires a command to run."
+                continue
+            fi
+            echo "Executing: $command"
+            execute_and_set_context "bash" "$command" "/bash $command"
+            continue
+        fi
+
+        # Check for run command
+        if [[ "$user_input" == "/run "* ]]; then
+            local command=$(extract_command_arg "$user_input")
+            if [ -z "$command" ]; then
+                echo "Error: /run command requires a command to run."
+                continue
+            fi
+            echo "Executing: $command"
+            execute_and_set_context "direct" "$command" "/run $command"
+            continue
+        fi
+        
+        # Skip empty input
+        [ -z "$user_input" ] && continue
+        
+        # Escape user input for JSON
+        local escaped_input
+        escaped_input=$(escape_for_json "$user_input")
+
+        local full_user_message="${escaped_input}"
+        if [ -n "$ADDITIONAL_CONTEXT" ]; then
+            # Escape ADDITIONAL_CONTEXT for JSON (handles ANSI codes and special chars)
+            local escaped_additional_context
+            escaped_additional_context=$(escape_for_json "$ADDITIONAL_CONTEXT")
+            full_user_message="Context from previous command:\n${escaped_additional_context}\n\nUser message:\n${escaped_input}"
+            ADDITIONAL_CONTEXT="" # Clear content after use
+        fi
+        
+        # Append user message to memory
+        echo "{\"role\":\"user\",\"content\":\"${full_user_message}\"}" >> "$MEMORY_FILE"
+        
+        # Build messages from history
+        local messages_json
+        messages_json=$(build_messages)
+        
+        if [ "$DEBUG_MODE" = "true" ]; then
+            echo "DEBUG: messages_json sent to AI: ${messages_json}"
+        fi
+        # Send message and get response
+        echo -n "AI: "
+        local assistant_response
+        assistant_response=$(send_message "$messages_json")
+        
+        if [ $? -eq 0 ]; then
+            echo "$assistant_response"
+            last_assistant_response="$assistant_response" # Store the last AI response
+            
+            # Escape response for JSON storage, including newlines
+            local escaped_response
+            escaped_response=$(echo "$assistant_response" | sed 's/\\/\\\\/g; s/"/\\"/g; s/\t/\\t/g; s/\n/\\n/g')
+            
+            # Append assistant response to memory
+            echo "{\"role\":\"assistant\",\"content\":\"${escaped_response}\"}" >> "$MEMORY_FILE"
+        else
+            echo "$assistant_response"
+            last_assistant_response="" # Clear if there was an error
+        fi
+        
+        echo ""
+    done
+}
+
+# Run main function
+main
